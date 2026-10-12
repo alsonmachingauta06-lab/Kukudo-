@@ -1,0 +1,11 @@
+import {CHARS,Char} from "./characters";
+export type {Char};
+const get=(k:string,d:any)=>{try{return JSON.parse(localStorage.getItem(k)||"")}catch{return d}};
+export const getAll=():Char[]=>[...get("k_custom",[]),...CHARS];
+export const avatarOf=(c:Char)=>(typeof localStorage!=="undefined"&&localStorage.getItem("av:"+c.id))||c.avatar||"";
+export const setAvatar=(id:string,u:string)=>{try{localStorage.setItem("av:"+id,u)}catch{}};
+export const follows=():string[]=>get("k_follow",[]);
+export const toggleFollow=(id:string)=>{const f=follows();const n=f.includes(id)?f.filter(x=>x!==id):[...f,id];localStorage.setItem("k_follow",JSON.stringify(n));return n};
+export const bump=(id:string)=>{const m=get("k_counts",{});m[id]=(m[id]||0)+1;localStorage.setItem("k_counts",JSON.stringify(m))};
+export const extra=(id:string):number=>get("k_counts",{})[id]||0;
+export const fmt=(n:number)=>n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?(n/1e3).toFixed(1)+"K":""+n;
